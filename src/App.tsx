@@ -69,6 +69,7 @@ export default function App() {
   const [teacherPassword, setTeacherPassword] = useState('');
   const [currentMinigame, setCurrentMinigame] = useState<string | null>(null);
   const [animClass, setAnimClass] = useState('animate-fadeIn');
+  const [selectedChoiceIndex, setSelectedChoiceIndex] = useState<number | null>(null);
 
   const triggerAnim = () => {
     setAnimClass('');
@@ -163,6 +164,8 @@ export default function App() {
   };
 
   const advanceScene = () => {
+    if (selectedChoiceIndex === null) return; // Блокируем переход если не выбран вариант
+    
     setState(prev => {
       const currentSceneData = SCENES.find(s => s.id === prev.currentScene);
       if (!currentSceneData) return prev;
@@ -187,6 +190,7 @@ export default function App() {
         return determineEnding(prev);
       }
     });
+    setSelectedChoiceIndex(null); // Сбрасываем выбор для новой сцены
     triggerAnim();
   };
 
@@ -231,48 +235,48 @@ export default function App() {
         </div>
         <div className="stat-item">
           <span>📈</span>
-          <span>{formatMoney(state.stats.profit)}</span>
+          <span className="text-white">{formatMoney(state.stats.profit)}</span>
         </div>
         <div className="stat-item">
           <span>👥</span>
-          <span>{state.stats.team}</span>
+          <span className="text-white">{state.stats.team}</span>
           <div className="stat-bar">
-            <div className="stat-bar-fill bg-blue-400" style={{ width: `${state.stats.morale}%` }}/>
+            <div className="stat-bar-fill" style={{ width: `${state.stats.morale}%`, backgroundColor: '#60a5fa' }}/>
           </div>
         </div>
         <div className="stat-item">
           <span>⭐</span>
           <div className="stat-bar">
-            <div className="stat-bar-fill bg-yellow-400" style={{ width: `${state.stats.reputation}%` }}/>
+            <div className="stat-bar-fill" style={{ width: `${state.stats.reputation}%`, backgroundColor: '#fbbf24' }}/>
           </div>
-          <span>{state.stats.reputation}</span>
+          <span className="text-white">{state.stats.reputation}</span>
         </div>
         <div className="stat-item">
           <span>😊</span>
           <div className="stat-bar">
-            <div className="stat-bar-fill bg-green-400" style={{ width: `${state.stats.satisfaction}%` }}/>
+            <div className="stat-bar-fill" style={{ width: `${state.stats.satisfaction}%`, backgroundColor: '#34d399' }}/>
           </div>
         </div>
         <div className="stat-item">
           <span>⚖️</span>
           <div className="stat-bar">
-            <div className="stat-bar-fill bg-purple-400" style={{ width: `${state.stats.legal}%` }}/>
+            <div className="stat-bar-fill" style={{ width: `${state.stats.legal}%`, backgroundColor: '#a78bfa' }}/>
           </div>
         </div>
         <div className="stat-item">
           <span>🔥</span>
           <div className="stat-bar">
-            <div className="stat-bar-fill bg-red-400" style={{ width: `${state.stats.risk}%` }}/>
+            <div className="stat-bar-fill" style={{ width: `${state.stats.risk}%`, backgroundColor: '#f87171' }}/>
           </div>
         </div>
         <div className="stat-item">
           <span>💡</span>
           <div className="stat-bar">
-            <div className="stat-bar-fill bg-cyan-400" style={{ width: `${state.stats.innovation}%` }}/>
+            <div className="stat-bar-fill" style={{ width: `${state.stats.innovation}%`, backgroundColor: '#22d3ee' }}/>
           </div>
         </div>
         <div className="stat-item text-xs opacity-70">
-          Этап {state.currentAct}/6
+          <span className="text-white">Этап {state.currentAct}/6</span>
         </div>
       </div>
     </div>
@@ -344,32 +348,50 @@ export default function App() {
 
   const renderCreateScreen = () => (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-fadeIn">
-      <div className="game-card max-w-2xl w-full">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold mb-2 text-gray-800">🚀 Создай свой стартап</h2>
-          <p className="text-gray-600">Заполни данные, чтобы начать предпринимательское путешествие</p>
+      <div className="game-card max-w-3xl w-full">
+        <div className="text-center mb-10">
+          <div className="inline-block mb-4">
+            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-5xl shadow-lg shadow-orange-300/50 transform hover:scale-110 transition-transform">
+              🚀
+            </div>
+          </div>
+          <h2 className="text-4xl font-bold mb-3 text-gray-800">Создай свой стартап</h2>
+          <p className="text-gray-600 text-lg">Заполни данные, чтобы начать предпринимательское путешествие</p>
+          <div className="mt-4 flex justify-center gap-2">
+            <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+            <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+          </div>
         </div>
         
         {/* Шаг 1: Имя основателя */}
-        <div className="mb-8">
+        <div className="mb-10">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg">1</div>
-            <label className="text-lg font-semibold text-gray-800">Имя основателя</label>
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-orange-300/50">1</div>
+            <label className="text-xl font-bold text-gray-800">Имя основателя</label>
           </div>
-          <input
-            type="text"
-            className="w-full p-4 rounded-xl border-2 border-gray-300 focus:border-orange-400 focus:ring-4 focus:ring-orange-100 outline-none text-gray-800 text-lg transition-all"
-            placeholder="Введите ваше имя"
-            value={state.founderName}
-            onChange={e => setState(prev => ({ ...prev, founderName: e.target.value }))}
-          />
+          <div className="relative">
+            <input
+              type="text"
+              className="w-full p-5 rounded-2xl border-2 border-gray-300 focus:border-orange-400 focus:ring-4 focus:ring-orange-100 outline-none text-gray-800 text-lg transition-all bg-white shadow-sm"
+              placeholder="Как тебя зовут?"
+              value={state.founderName}
+              onChange={e => setState(prev => ({ ...prev, founderName: e.target.value }))}
+            />
+            {state.founderName && (
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl">✨</div>
+            )}
+          </div>
         </div>
 
         {/* Шаг 2: Сфера бизнеса */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg">2</div>
-            <label className="text-lg font-semibold text-gray-800">Сфера бизнеса</label>
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-orange-300/50">2</div>
+            <div>
+              <label className="text-xl font-bold text-gray-800">Сфера бизнеса</label>
+              <p className="text-sm text-gray-500">Выбери направление, в котором хочешь работать</p>
+            </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {Object.entries(SPHERES).map(([key, s]) => (
@@ -377,16 +399,16 @@ export default function App() {
                 key={key}
                 className={`group relative p-6 rounded-2xl border-3 text-left transition-all duration-300 transform hover:scale-105 ${
                   state.sphere === key 
-                    ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg shadow-orange-200' 
-                    : 'border-gray-300 bg-white hover:border-orange-300 hover:shadow-md'
+                    ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-xl shadow-orange-200/50 scale-105' 
+                    : 'border-gray-200 bg-white hover:border-orange-300 hover:shadow-lg'
                 }`}
                 onClick={() => setState(prev => ({ ...prev, sphere: key, businessIdea: '' }))}
               >
-                <div className="text-5xl mb-3 transform group-hover:scale-110 transition-transform">{s.emoji}</div>
+                <div className="text-6xl mb-3 transform group-hover:scale-110 transition-transform duration-300">{s.emoji}</div>
                 <div className="font-bold text-xl text-gray-800 mb-2">{s.name}</div>
                 <div className="text-sm text-gray-600 leading-relaxed">{s.description}</div>
                 {state.sphere === key && (
-                  <div className="absolute top-3 right-3 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white text-xl">✓</div>
+                  <div className="absolute top-3 right-3 w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-2xl shadow-lg animate-bounce">✓</div>
                 )}
               </button>
             ))}
@@ -395,44 +417,59 @@ export default function App() {
 
         {/* Шаг 3: Тип бизнеса */}
         {state.sphere && (
-          <div className="mb-8 animate-slideUp">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-lg">3</div>
-              <label className="text-lg font-semibold text-gray-800">Форма бизнеса</label>
+          <div className="mb-10 animate-slideUp">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-green-300/50">3</div>
+              <div>
+                <label className="text-xl font-bold text-gray-800">Форма бизнеса</label>
+                <p className="text-sm text-gray-500">Выбери юридическую форму для своего дела</p>
+              </div>
             </div>
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-5">
               {Object.entries(BUSINESS_TYPES).map(([key, bt]) => (
                 <button
                   key={key}
-                  className={`group relative p-6 rounded-2xl border-3 text-left transition-all duration-300 transform hover:scale-102 ${
+                  className={`group relative p-7 rounded-2xl border-3 text-left transition-all duration-300 transform hover:scale-[1.02] ${
                     state.businessType === key 
-                      ? 'border-green-500 bg-gradient-to-br from-green-50 to-green-100 shadow-lg shadow-green-200' 
-                      : 'border-gray-300 bg-white hover:border-green-300 hover:shadow-md'
+                      ? 'border-green-500 bg-gradient-to-br from-green-50 to-green-100 shadow-xl shadow-green-200/50 scale-[1.02]' 
+                      : 'border-gray-200 bg-white hover:border-green-300 hover:shadow-lg'
                   }`}
                   onClick={() => setState(prev => ({ ...prev, businessType: key }))}
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="font-bold text-xl text-gray-800">{bt.name}</div>
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="font-bold text-2xl text-gray-800">{bt.name}</div>
                     {state.businessType === key && (
-                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xl">✓</div>
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white text-2xl shadow-lg animate-bounce">✓</div>
                     )}
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-gray-700">💰 Налог:</span>
-                      <span className="text-sm text-gray-600">{bt.tax}</span>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                      <span className="text-lg">💰</span>
+                      <div>
+                        <div className="text-xs font-semibold text-gray-500 uppercase">Налог</div>
+                        <div className="text-base font-bold text-gray-800">{bt.tax}</div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-gray-700">📊 Лимит:</span>
-                      <span className="text-sm text-gray-600">{bt.maxIncome}</span>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                      <span className="text-lg">📊</span>
+                      <div>
+                        <div className="text-xs font-semibold text-gray-500 uppercase">Лимит дохода</div>
+                        <div className="text-base font-bold text-gray-800">{bt.maxIncome}</div>
+                      </div>
                     </div>
-                    <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                      <div className="text-xs font-semibold text-green-700 mb-1">✅ Плюсы:</div>
-                      <div className="text-sm text-green-800">{bt.pros}</div>
-                    </div>
-                    <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-                      <div className="text-xs font-semibold text-red-700 mb-1">⚠️ Минусы:</div>
-                      <div className="text-sm text-red-800">{bt.cons}</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                      <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-xl border-2 border-green-200">
+                        <div className="text-sm font-bold text-green-700 mb-2 flex items-center gap-2">
+                          <span className="text-lg">✅</span> Плюсы
+                        </div>
+                        <div className="text-sm text-green-900 leading-relaxed">{bt.pros}</div>
+                      </div>
+                      <div className="p-4 bg-gradient-to-br from-red-50 to-red-100 rounded-xl border-2 border-red-200">
+                        <div className="text-sm font-bold text-red-700 mb-2 flex items-center gap-2">
+                          <span className="text-lg">⚠️</span> Минусы
+                        </div>
+                        <div className="text-sm text-red-900 leading-relaxed">{bt.cons}</div>
+                      </div>
                     </div>
                   </div>
                 </button>
@@ -443,31 +480,34 @@ export default function App() {
 
         {/* Шаг 4: Бизнес-идея */}
         {state.sphere && state.businessType && (
-          <div className="mb-8 animate-slideUp">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-lg">4</div>
-              <label className="text-lg font-semibold text-gray-800">Бизнес-идея</label>
+          <div className="mb-10 animate-slideUp">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-purple-300/50">4</div>
+              <div>
+                <label className="text-xl font-bold text-gray-800">Бизнес-идея</label>
+                <p className="text-sm text-gray-500">Что именно ты будешь продавать или делать?</p>
+              </div>
             </div>
-            <div className="mb-4">
-              <p className="text-sm text-gray-600 mb-3">Выберите готовую идею или предложите свою:</p>
-              <div className="grid grid-cols-1 gap-3">
+            <div className="mb-5">
+              <p className="text-base text-gray-700 mb-4 font-medium">Выбери готовую идею или предложи свою:</p>
+              <div className="grid grid-cols-1 gap-4">
                 {(IDEAS[state.sphere as keyof typeof IDEAS] || []).map((idea: string, i: number) => (
                   <button
                     key={i}
-                    className={`group relative p-5 rounded-xl border-3 text-left transition-all duration-300 transform hover:scale-102 ${
+                    className={`group relative p-6 rounded-2xl border-3 text-left transition-all duration-300 transform hover:scale-[1.02] ${
                       state.businessIdea === idea 
-                        ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg shadow-purple-200' 
-                        : 'border-gray-300 bg-white hover:border-purple-300 hover:shadow-md'
+                        ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 shadow-xl shadow-purple-200/50 scale-[1.02]' 
+                        : 'border-gray-200 bg-white hover:border-purple-300 hover:shadow-lg'
                     }`}
                     onClick={() => setState(prev => ({ ...prev, businessIdea: idea }))}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className="text-3xl flex-shrink-0">💡</div>
+                    <div className="flex items-start gap-4">
+                      <div className="text-4xl flex-shrink-0 transform group-hover:scale-110 transition-transform duration-300">💡</div>
                       <div className="flex-1">
-                        <div className="font-semibold text-gray-800 text-base leading-relaxed">{idea}</div>
+                        <div className="font-bold text-lg text-gray-800 leading-relaxed">{idea}</div>
                       </div>
                       {state.businessIdea === idea && (
-                        <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-xl flex-shrink-0">✓</div>
+                        <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl flex-shrink-0 shadow-lg animate-bounce">✓</div>
                       )}
                     </div>
                   </button>
@@ -475,11 +515,11 @@ export default function App() {
               </div>
             </div>
             <div className="relative">
-              <div className="absolute left-4 top-4 text-2xl">✨</div>
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-3xl">✨</div>
               <input
                 type="text"
-                className="w-full p-4 pl-14 rounded-xl border-2 border-gray-300 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none text-gray-800 text-base transition-all"
-                placeholder="Или введите свою уникальную идею..."
+                className="w-full p-5 pl-16 rounded-2xl border-2 border-gray-300 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none text-gray-800 text-lg transition-all bg-white shadow-sm"
+                placeholder="Или введи свою уникальную идею..."
                 value={state.businessIdea}
                 onChange={e => setState(prev => ({ ...prev, businessIdea: e.target.value }))}
               />
@@ -488,22 +528,29 @@ export default function App() {
         )}
 
         {/* Кнопка запуска */}
-        <button
-          className={`w-full py-5 rounded-2xl font-bold text-xl transition-all duration-300 transform ${
-            state.founderName && state.sphere && state.businessType && state.businessIdea
-              ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-400'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          }`}
-          disabled={!state.founderName || !state.sphere || !state.businessType || !state.businessIdea}
-          onClick={() => {
-            setState(prev => ({ ...prev, screen: 'game', currentScene: 'a1_s1', currentAct: 1 }));
-            triggerAnim();
-          }}
-        >
-          {state.founderName && state.sphere && state.businessType && state.businessIdea
-            ? '🚀 Начать предпринимательское путешествие!'
-            : 'Заполните все поля для начала'}
-        </button>
+        <div className="mt-12 pt-8 border-t-2 border-gray-200">
+          <button
+            className={`w-full py-6 rounded-2xl font-bold text-2xl transition-all duration-300 transform ${
+              state.founderName && state.sphere && state.businessType && state.businessIdea
+                ? 'bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 text-white shadow-2xl shadow-orange-300/50 hover:scale-105 hover:shadow-orange-400/60 animate-glow'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }`}
+            disabled={!state.founderName || !state.sphere || !state.businessType || !state.businessIdea}
+            onClick={() => {
+              setState(prev => ({ ...prev, screen: 'game', currentScene: 'a1_s1', currentAct: 1 }));
+              triggerAnim();
+            }}
+          >
+            {state.founderName && state.sphere && state.businessType && state.businessIdea
+              ? '🚀 Начать предпринимательское путешествие!'
+              : '⚠️ Заполни все поля для начала'}
+          </button>
+          {state.founderName && state.sphere && state.businessType && state.businessIdea && (
+            <div className="text-center mt-4 text-sm text-gray-500 animate-fadeIn">
+              ✨ Всё готово! Нажми кнопку, чтобы начать ✨
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -573,12 +620,15 @@ export default function App() {
               {scene.choices.map((choice, i) => (
                 <button
                   key={i}
-                  className="btn-choice"
+                  className={`btn-choice ${selectedChoiceIndex === i ? 'border-orange-500 bg-orange-500/20 shadow-lg shadow-orange-500/30' : ''}`}
                   onClick={() => {
-                    applyChoice(choice);
-                    if (choice.teaching) {
-                      setTeachingMsg(choice.teaching);
-                      setTimeout(() => setTeachingMsg(null), 6000);
+                    if (selectedChoiceIndex !== i) {
+                      setSelectedChoiceIndex(i);
+                      applyChoice(choice);
+                      if (choice.teaching) {
+                        setTeachingMsg(choice.teaching);
+                        setTimeout(() => setTeachingMsg(null), 6000);
+                      }
                     }
                   }}
                 >
@@ -612,8 +662,12 @@ export default function App() {
 
             {/* Next scene button */}
             <div className="text-center mt-6">
-              <button className="btn btn-primary" onClick={advanceScene}>
-                Далее →
+              <button 
+                className={`btn ${selectedChoiceIndex !== null ? 'btn-primary' : 'btn-outline opacity-50 cursor-not-allowed'}`} 
+                onClick={advanceScene}
+                disabled={selectedChoiceIndex === null}
+              >
+                {selectedChoiceIndex !== null ? 'Далее →' : 'Выберите вариант ответа'}
               </button>
             </div>
           </div>
