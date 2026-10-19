@@ -1053,13 +1053,13 @@ function MinigameTargetAudience({ sphere, onComplete }: { sphere: string; onComp
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-2xl w-full">
-        <h2 className="text-2xl font-bold mb-3 text-white">🎯 {MINIGAMES.target_audience.title}</h2>
-        <p className="text-sm text-gray-300 mb-4">{MINIGAMES.target_audience.description}</p>
-        <p className="text-sm mb-4 text-gray-200">Твоя сфера: <strong className="text-orange-400">{SPHERES[sphere]?.name}</strong>. Определи, кто твой идеальный клиент!</p>
+        <h2 className="text-2xl font-bold mb-3 text-gray-800">🎯 {MINIGAMES.target_audience.title}</h2>
+        <p className="text-sm mb-4 text-gray-600">{MINIGAMES.target_audience.description}</p>
+        <p className="text-sm mb-4 text-gray-700">Твоя сфера: <strong className="text-orange-500">{SPHERES[sphere]?.name}</strong>. Определи, кто твой идеальный клиент!</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <h4 className="font-bold text-green-400 mb-3 text-lg">✅ Мой клиент</h4>
+            <h4 className="font-bold text-green-600 mb-3 text-lg">✅ Мой клиент</h4>
             <div className={`drop-zone ${checked ? 'correct' : ''}`}>
               {myClients.map(id => {
                 const p = personas.find(x => x.id === id);
@@ -1067,18 +1067,18 @@ function MinigameTargetAudience({ sphere, onComplete }: { sphere: string; onComp
                 return (
                   <div key={id} className={`drag-item mb-3 ${checked ? (isCorrect ? 'border-green-400 bg-green-900/50' : 'border-red-400 bg-red-900/50') : ''}`}>
                     <div className="flex justify-between items-center">
-                      <span className="text-base font-semibold">{p?.name}</span>
-                      <button onClick={() => moveToNot(id)} className="text-sm text-red-400 hover:text-red-300 font-bold">✕</button>
+                      <span className="text-base font-semibold text-gray-800">{p?.name}</span>
+                      <button onClick={() => moveToNot(id)} className="text-sm text-red-600 hover:text-red-500 font-bold">✕</button>
                     </div>
-                    <div className="text-sm opacity-80 mt-1">{p?.desc}</div>
+                    <div className="text-sm text-gray-600 mt-1">{p?.desc}</div>
                   </div>
                 );
               })}
-              {myClients.length === 0 && <p className="text-sm opacity-50 text-center py-6">Нажмите ✅ на карточке ниже</p>}
+              {myClients.length === 0 && <p className="text-sm text-gray-500 text-center py-6">Нажмите ✅ на карточке ниже</p>}
             </div>
           </div>
           <div>
-            <h4 className="font-bold text-red-400 mb-3 text-lg">❌ Не мой сегмент</h4>
+            <h4 className="font-bold text-red-600 mb-3 text-lg">❌ Не мой сегмент</h4>
             <div className={`drop-zone ${checked ? 'correct' : ''}`}>
               {notClients.map(id => {
                 const p = personas.find(x => x.id === id);
@@ -1086,29 +1086,29 @@ function MinigameTargetAudience({ sphere, onComplete }: { sphere: string; onComp
                 return (
                   <div key={id} className={`drag-item mb-3 ${checked ? (isCorrect ? 'border-green-400 bg-green-900/50' : 'border-red-400 bg-red-900/50') : ''}`}>
                     <div className="flex justify-between items-center">
-                      <span className="text-base font-semibold">{p?.name}</span>
-                      <button onClick={() => moveToMy(id)} className="text-sm text-green-400 hover:text-green-300 font-bold">←</button>
+                      <span className="text-base font-semibold text-gray-800">{p?.name}</span>
+                      <button onClick={() => moveToMy(id)} className="text-sm text-green-600 hover:text-green-500 font-bold">←</button>
                     </div>
-                    <div className="text-sm opacity-80 mt-1">{p?.desc}</div>
+                    <div className="text-sm text-gray-600 mt-1">{p?.desc}</div>
                   </div>
                 );
               })}
-              {notClients.length === 0 && <p className="text-sm opacity-50 text-center py-6">Нажмите ❌ на карточке ниже</p>}
+              {notClients.length === 0 && <p className="text-sm text-gray-500 text-center py-6">Нажмите ❌ на карточке ниже</p>}
             </div>
           </div>
         </div>
 
         {/* Available personas */}
         <div className="mb-6">
-          <h4 className="font-bold mb-3 text-lg text-orange-400">Доступные сегменты:</h4>
+          <h4 className="font-bold mb-3 text-lg text-orange-600">Доступные сегменты:</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {personas.filter(p => !myClients.includes(p.id) && !notClients.includes(p.id)).map(p => (
               <div key={p.id} className="drag-item">
                 <div className="flex items-center justify-between gap-3">
                   <button onClick={() => moveToMy(p.id)} className="text-lg text-green-400 hover:text-green-300 font-bold flex-shrink-0">✅</button>
                   <div className="flex-1">
-                    <div className="text-base font-semibold">{p.name}</div>
-                    <div className="text-sm opacity-70 mt-1">{p.desc}</div>
+                    <div className="text-base font-semibold text-gray-800">{p.name}</div>
+                    <div className="text-sm text-gray-600 mt-1">{p.desc}</div>
                   </div>
                   <button onClick={() => moveToNot(p.id)} className="text-lg text-red-400 hover:text-red-300 font-bold flex-shrink-0">❌</button>
                 </div>
@@ -1164,11 +1164,11 @@ function MinigameBusinessPlan({ onComplete }: { onComplete: (score: number) => v
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-2xl w-full">
-        <h2 className="text-2xl font-bold mb-3 text-white">📋 {MINIGAMES.business_plan.title}</h2>
-        <p className="text-sm text-gray-300 mb-4">{MINIGAMES.business_plan.description}</p>
+        <h2 className="text-2xl font-bold mb-3 text-gray-800">📋 {MINIGAMES.business_plan.title}</h2>
+        <p className="text-sm text-gray-600 mb-4">{MINIGAMES.business_plan.description}</p>
 
         <div className="mb-4">
-          <h4 className="font-semibold text-green-400 mb-2">Порядок разделов:</h4>
+          <h4 className="font-semibold text-green-600 mb-2">Порядок разделов:</h4>
           <div className="space-y-2">
             {order.map((id, i) => {
               const section = BUSINESS_PLAN_SECTIONS.find(s => s.id === id);
@@ -1177,12 +1177,12 @@ function MinigameBusinessPlan({ onComplete }: { onComplete: (score: number) => v
                 <div key={id} className={`p-3 rounded-lg border-2 ${checked ? (isCorrect ? 'border-green-400 bg-green-900/20' : 'border-red-400 bg-red-900/20') : 'border-gray-600 bg-gray-800/50'}`}>
                   <div className="flex justify-between items-center">
                     <div>
-                      <span className="text-xs font-bold text-orange-400 mr-2">{i + 1}.</span>
-                      <span className="text-sm">{section?.name}</span>
+                      <span className="text-xs font-bold text-orange-600 mr-2">{i + 1}.</span>
+                      <span className="text-sm text-gray-800">{section?.name}</span>
                     </div>
-                    <button onClick={() => removeSection(id)} className="text-xs text-red-400">✕</button>
+                    <button onClick={() => removeSection(id)} className="text-xs text-red-600">✕</button>
                   </div>
-                  <div className="text-xs opacity-60 ml-5">{section?.desc}</div>
+                  <div className="text-xs text-gray-600 ml-5">{section?.desc}</div>
                 </div>
               );
             })}
@@ -1190,12 +1190,12 @@ function MinigameBusinessPlan({ onComplete }: { onComplete: (score: number) => v
         </div>
 
         <div className="mb-4">
-          <h4 className="font-semibold mb-2">Доступные разделы:</h4>
+          <h4 className="font-semibold mb-2 text-gray-800">Доступные разделы:</h4>
           <div className="flex flex-wrap gap-2">
             {available.map(id => {
               const section = BUSINESS_PLAN_SECTIONS.find(s => s.id === id);
               return (
-                <button key={id} className="drag-item text-sm" onClick={() => addSection(id)}>
+                <button key={id} className="drag-item text-sm text-gray-800" onClick={() => addSection(id)}>
                   {section?.name}
                 </button>
               );
@@ -1242,11 +1242,11 @@ function MinigameInvestor({ onComplete }: { onComplete: (score: number) => void 
     return (
       <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
         <div className="game-card max-w-lg w-full text-center">
-          <h2 className="text-2xl font-bold mb-4 text-white">🤝 Переговоры завершены!</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">🤝 Переговоры завершены!</h2>
           <p className="text-4xl font-bold mb-2" style={{ color: finalScore >= 70 ? '#2ec4b6' : finalScore >= 40 ? '#ffd60a' : '#e71d36', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
             {finalScore}%
           </p>
-          <p className="text-sm text-gray-300 mb-4">
+          <p className="text-sm text-gray-600 mb-4">
             {finalScore >= 70 ? 'Отличные переговоры! Инвестор впечатлён.' :
              finalScore >= 40 ? 'Неплохо, но можно было лучше.' :
              'Инвестор не впечатлён. Нужно учиться аргументировать.'}
@@ -1265,15 +1265,15 @@ function MinigameInvestor({ onComplete }: { onComplete: (score: number) => void 
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-lg w-full">
-        <h2 className="text-2xl font-bold mb-4 text-white">💼 {MINIGAMES.investor.title}</h2>
-        <div className="mb-4 p-4 rounded-lg bg-gray-800 border border-gray-700">
-          <p className="text-sm text-gray-400">Инвестор:</p>
-          <p className="font-medium">«{dialogue.investor}»</p>
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">💼 {MINIGAMES.investor.title}</h2>
+        <div className="mb-4 p-4 rounded-lg bg-gray-100 border border-gray-300">
+          <p className="text-sm text-gray-600">Инвестор:</p>
+          <p className="font-medium text-gray-800">«{dialogue.investor}»</p>
         </div>
 
         {response && (
-          <div className="mb-4 p-3 rounded-lg bg-blue-900/30 border border-blue-700 animate-popIn">
-            <p className="text-sm">{response}</p>
+          <div className="mb-4 p-3 rounded-lg bg-blue-100 border border-blue-300 animate-popIn">
+            <p className="text-sm text-gray-800">{response}</p>
           </div>
         )}
 
@@ -1344,7 +1344,7 @@ function MinigameInterview({ onComplete }: { onComplete: (score: number) => void
     return (
       <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
         <div className="game-card max-w-lg w-full text-center">
-          <h2 className="text-2xl font-bold mb-4 text-white">Собеседования завершены!</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Собеседования завершены!</h2>
           <p className="text-4xl font-bold mb-2" style={{ color: finalScore >= 70 ? '#2ec4b6' : finalScore >= 40 ? '#ffd60a' : '#e71d36', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{finalScore}%</p>
           <div className="teaching-tip mb-4 text-left">
             На собеседовании важно: задавать вопросы о конкретных результатах, проверять мотивацию, оценивать культурное соответствие. Не нанимай «знакомого друга» без проверки навыков!
@@ -1360,7 +1360,7 @@ function MinigameInterview({ onComplete }: { onComplete: (score: number) => void
       <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
         <div className="game-card max-w-lg w-full text-center">
           <h3 className="font-bold mb-2">Решение по кандидату {candidate.name}</h3>
-          <p className="text-sm text-gray-400 mb-4">{candidate.hire}</p>
+          <p className="text-sm text-gray-600 mb-4">{candidate.hire}</p>
           <p className="text-sm">Ваше решение: <strong>{decision === 'hire' ? 'Нанять' : decision === 'trial' ? 'Испытательный срок' : 'Отказать'}</strong></p>
         </div>
       </div>
@@ -1372,18 +1372,18 @@ function MinigameInterview({ onComplete }: { onComplete: (score: number) => void
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-lg w-full">
-        <h2 className="text-2xl font-bold mb-3 text-white">🎤 {MINIGAMES.interview.title}</h2>
-        <div className="mb-4 p-3 rounded-lg bg-gray-800">
-          <p className="font-bold text-white">{candidate.name}</p>
-          <p className="text-sm text-gray-300">{candidate.resume}</p>
+        <h2 className="text-2xl font-bold mb-3 text-gray-800">🎤 {MINIGAMES.interview.title}</h2>
+        <div className="mb-4 p-3 rounded-lg bg-gray-100 border border-gray-300">
+          <p className="font-bold text-gray-800">{candidate.name}</p>
+          <p className="text-sm text-gray-600">{candidate.resume}</p>
           {candidate.redFlags.map((flag, i) => (
-            <p key={i} className="text-xs text-red-400 mt-1">⚠️ {flag}</p>
+            <p key={i} className="text-xs text-red-600 mt-1 font-semibold">⚠️ {flag}</p>
           ))}
         </div>
 
         {!showDecisionScreen ? (
           <div>
-            <p className="font-semibold mb-2 text-white">Вопрос {questionIdx + 1}/{candidate.questions.length}: {question.q}</p>
+            <p className="font-semibold mb-2 text-gray-800">Вопрос {questionIdx + 1}/{candidate.questions.length}: {question.q}</p>
             <div className="space-y-2">
               <button className="btn-choice" onClick={() => handleAnswer(true)}>
                 ✅ Хороший ответ: {question.good}
@@ -1395,7 +1395,7 @@ function MinigameInterview({ onComplete }: { onComplete: (score: number) => void
           </div>
         ) : (
           <div>
-            <p className="font-semibold mb-3 text-white">Принять решение:</p>
+            <p className="font-semibold mb-3 text-gray-800">Принять решение:</p>
             <button className="btn-choice" onClick={() => handleDecision('hire')}>💼 Нанять</button>
             <button className="btn-choice" onClick={() => handleDecision('trial')}>📋 Взять на испытательный срок</button>
             <button className="btn-choice" onClick={() => handleDecision('reject')}>🚫 Отказать</button>
@@ -1437,9 +1437,9 @@ function MinigameFinance({ onComplete }: { onComplete: (score: number) => void }
     return (
       <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
         <div className="game-card max-w-lg w-full text-center">
-          <h2 className="text-2xl font-bold mb-4 text-white">💰 Финансовый калькулятор</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">💰 Финансовый калькулятор</h2>
           <p className="text-4xl font-bold mb-2" style={{ color: score >= 70 ? '#2ec4b6' : score >= 40 ? '#ffd60a' : '#e71d36', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{score}%</p>
-          <p className="text-sm text-gray-300 mb-4">Правильных ответов: {correctCount} из {FINANCE_PROBLEMS.length}</p>
+          <p className="text-sm text-gray-600 mb-4">Правильных ответов: {correctCount} из {FINANCE_PROBLEMS.length}</p>
           <div className="teaching-tip mb-4 text-left">
             Ключевые формулы: Прибыль = Выручка − Издержки. Точка безубыточности = Постоянные затраты / Маржа на единицу. Кассовый разрыв = когда нужно заплатить сейчас, а деньги придут позже.
           </div>
@@ -1452,11 +1452,11 @@ function MinigameFinance({ onComplete }: { onComplete: (score: number) => void }
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-lg w-full">
-        <h2 className="text-2xl font-bold mb-3 text-white">💰 {MINIGAMES.finance.title}</h2>
-        <p className="text-sm text-gray-300 mb-3">Задача {problemIdx + 1} из {FINANCE_PROBLEMS.length}</p>
+        <h2 className="text-2xl font-bold mb-3 text-gray-800">💰 {MINIGAMES.finance.title}</h2>
+        <p className="text-sm text-gray-600 mb-3">Задача {problemIdx + 1} из {FINANCE_PROBLEMS.length}</p>
         
-        <div className="p-4 rounded-lg bg-gray-800 mb-4">
-          <p className="text-sm">{problem.question}</p>
+        <div className="p-4 rounded-lg bg-gray-100 border border-gray-300 mb-4">
+          <p className="text-sm text-gray-800">{problem.question}</p>
         </div>
 
         <div className="space-y-2 mb-4">
@@ -1540,10 +1540,10 @@ function MinigameMarketingMix({ sphere, onComplete }: { sphere: string; onComple
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-lg w-full">
-        <h2 className="text-2xl font-bold mb-3 text-white">📣 {MINIGAMES.marketing_mix.title}</h2>
-        <p className="text-sm text-gray-300 mb-4">{MINIGAMES.marketing_mix.description}</p>
-        <p className="text-sm mb-2 text-gray-200">Бюджет: <strong className="text-yellow-400">{formatMoney(totalBudget)}</strong></p>
-        <p className={`text-sm mb-4 font-semibold ${remaining < 0 ? 'text-red-400' : 'text-green-400'}`}>
+        <h2 className="text-2xl font-bold mb-3 text-gray-800">📣 {MINIGAMES.marketing_mix.title}</h2>
+        <p className="text-sm text-gray-600 mb-4">{MINIGAMES.marketing_mix.description}</p>
+        <p className="text-sm mb-2 text-gray-700">Бюджет: <strong className="text-yellow-600">{formatMoney(totalBudget)}</strong></p>
+        <p className={`text-sm mb-4 font-semibold ${remaining < 0 ? 'text-red-600' : 'text-green-600'}`}>
           Осталось: {formatMoney(remaining)}
         </p>
 
@@ -1574,7 +1574,7 @@ function MinigameMarketingMix({ sphere, onComplete }: { sphere: string; onComple
                score >= 40 ? '⚠️ Неплохо, но есть куда расти. Попробуй другой баланс.' :
                '❌ Стоит пересмотреть стратегию. Не вкладывай всё в один канал.'}
             </p>
-            <p className="text-xs mt-3 text-gray-300">
+            <p className="text-xs mt-3 text-gray-600">
               💡 Подсказка: для <strong className="text-orange-400">{SPHERES[sphere]?.name}</strong> лучше всего работают {
                 sphere === 'food' ? 'скидки и сервис' :
                 sphere === 'it' ? 'реклама и сервис' :
