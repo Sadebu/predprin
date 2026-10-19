@@ -303,7 +303,10 @@ export default function App() {
         {loadGame() && (
           <button className="btn btn-success" onClick={() => {
             const saved = loadGame();
-            if (saved) setState(saved);
+            if (saved) {
+              setState(saved);
+              setSelectedChoiceIndex(null); // Сбрасываем выбор при загрузке
+            }
           }}>
             ▶️ Продолжить
           </button>
@@ -331,6 +334,7 @@ export default function App() {
         <div className="flex flex-col gap-4">
           <button className="btn btn-primary text-lg py-4" onClick={() => {
             setState(prev => ({ ...prev, screen: 'create' }));
+            setSelectedChoiceIndex(null); // Сбрасываем выбор при начале новой игры
             triggerAnim();
           }}>
             🎓 Я ученик — играть!
@@ -538,6 +542,7 @@ export default function App() {
             disabled={!state.founderName || !state.sphere || !state.businessType || !state.businessIdea}
             onClick={() => {
               setState(prev => ({ ...prev, screen: 'game', currentScene: 'a1_s1', currentAct: 1 }));
+              setSelectedChoiceIndex(null); // Сбрасываем выбор при начале игры
               triggerAnim();
             }}
           >
@@ -617,24 +622,37 @@ export default function App() {
 
             {/* Choices */}
             <div className="space-y-3">
-              {scene.choices.map((choice, i) => (
-                <button
-                  key={i}
-                  className={`btn-choice ${selectedChoiceIndex === i ? 'border-orange-500 bg-orange-500/20 shadow-lg shadow-orange-500/30' : ''}`}
-                  onClick={() => {
-                    if (selectedChoiceIndex !== i) {
+              {scene.choices.map((choice, i) => {
+                const isSelected = selectedChoiceIndex === i;
+                const isDisabled = selectedChoiceIndex !== null && selectedChoiceIndex !== i;
+                return (
+                  <button
+                    key={`${state.currentScene}-${i}`}
+                    className={`btn-choice transition-all duration-300 ${
+                      isSelected 
+                        ? 'border-orange-500 bg-orange-500/25 shadow-lg shadow-orange-500/30 ring-2 ring-orange-400' 
+                        : isDisabled 
+                          ? 'opacity-40 cursor-not-allowed grayscale' 
+                          : 'hover:border-orange-300'
+                    }`}
+                    disabled={isDisabled}
+                    onClick={() => {
+                      if (selectedChoiceIndex !== null) return; // Полная блокировка
                       setSelectedChoiceIndex(i);
                       applyChoice(choice);
                       if (choice.teaching) {
                         setTeachingMsg(choice.teaching);
                         setTimeout(() => setTeachingMsg(null), 6000);
                       }
-                    }
-                  }}
-                >
-                  {choice.text}
-                </button>
-              ))}
+                    }}
+                  >
+                    <span className="flex items-center gap-2">
+                      {isSelected && <span className="text-orange-500 text-xl">✓</span>}
+                      {choice.text}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* Teaching message */}
@@ -796,12 +814,14 @@ export default function App() {
           <div className="flex flex-wrap gap-3 justify-center">
             <button className="btn btn-primary" onClick={() => {
               setState(getInitialState());
+              setSelectedChoiceIndex(null); // Сбрасываем выбор
               triggerAnim();
             }}>
               🔄 Играть снова
             </button>
             <button className="btn btn-outline" onClick={() => {
               setState(prev => ({ ...prev, screen: 'start' }));
+              setSelectedChoiceIndex(null); // Сбрасываем выбор
               triggerAnim();
             }}>
               🏠 На главную
