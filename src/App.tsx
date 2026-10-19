@@ -989,55 +989,58 @@ function MinigameTargetAudience({ sphere, onComplete }: { sphere: string; onComp
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <h4 className="font-semibold text-green-400 mb-2">✅ Мой клиент</h4>
+            <h4 className="font-bold text-green-400 mb-3 text-lg">✅ Мой клиент</h4>
             <div className={`drop-zone ${checked ? 'correct' : ''}`}>
               {myClients.map(id => {
                 const p = personas.find(x => x.id === id);
                 const isCorrect = correct.includes(id);
                 return (
-                  <div key={id} className={`drag-item mb-2 ${checked ? (isCorrect ? 'border-green-400 bg-green-900/30' : 'border-red-400 bg-red-900/30') : ''}`}>
+                  <div key={id} className={`drag-item mb-3 ${checked ? (isCorrect ? 'border-green-400 bg-green-900/50' : 'border-red-400 bg-red-900/50') : ''}`}>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm">{p?.name}</span>
-                      <button onClick={() => moveToNot(id)} className="text-xs text-red-400">✕</button>
+                      <span className="text-base font-semibold">{p?.name}</span>
+                      <button onClick={() => moveToNot(id)} className="text-sm text-red-400 hover:text-red-300 font-bold">✕</button>
                     </div>
-                    <div className="text-xs opacity-60">{p?.desc}</div>
+                    <div className="text-sm opacity-80 mt-1">{p?.desc}</div>
                   </div>
                 );
               })}
-              {myClients.length === 0 && <p className="text-xs opacity-40 text-center py-4">Перетащи сюда</p>}
+              {myClients.length === 0 && <p className="text-sm opacity-50 text-center py-6">Нажмите ✅ на карточке ниже</p>}
             </div>
           </div>
           <div>
-            <h4 className="font-semibold text-red-400 mb-2">❌ Не мой сегмент</h4>
+            <h4 className="font-bold text-red-400 mb-3 text-lg">❌ Не мой сегмент</h4>
             <div className={`drop-zone ${checked ? 'correct' : ''}`}>
               {notClients.map(id => {
                 const p = personas.find(x => x.id === id);
                 const isCorrect = !correct.includes(id);
                 return (
-                  <div key={id} className={`drag-item mb-2 ${checked ? (isCorrect ? 'border-green-400 bg-green-900/30' : 'border-red-400 bg-red-900/30') : ''}`}>
+                  <div key={id} className={`drag-item mb-3 ${checked ? (isCorrect ? 'border-green-400 bg-green-900/50' : 'border-red-400 bg-red-900/50') : ''}`}>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm">{p?.name}</span>
-                      <button onClick={() => moveToMy(id)} className="text-xs text-green-400">←</button>
+                      <span className="text-base font-semibold">{p?.name}</span>
+                      <button onClick={() => moveToMy(id)} className="text-sm text-green-400 hover:text-green-300 font-bold">←</button>
                     </div>
-                    <div className="text-xs opacity-60">{p?.desc}</div>
+                    <div className="text-sm opacity-80 mt-1">{p?.desc}</div>
                   </div>
                 );
               })}
-              {notClients.length === 0 && <p className="text-xs opacity-40 text-center py-4">Перетащи сюда</p>}
+              {notClients.length === 0 && <p className="text-sm opacity-50 text-center py-6">Нажмите ❌ на карточке ниже</p>}
             </div>
           </div>
         </div>
 
         {/* Available personas */}
-        <div className="mb-4">
-          <h4 className="font-semibold mb-2">Доступные сегменты:</h4>
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-6">
+          <h4 className="font-bold mb-3 text-lg text-orange-400">Доступные сегменты:</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {personas.filter(p => !myClients.includes(p.id) && !notClients.includes(p.id)).map(p => (
               <div key={p.id} className="drag-item">
-                <div className="flex gap-2">
-                  <button onClick={() => moveToMy(p.id)} className="text-xs text-green-400">✅</button>
-                  <span className="text-sm">{p.name}</span>
-                  <button onClick={() => moveToNot(p.id)} className="text-xs text-red-400">❌</button>
+                <div className="flex items-center justify-between gap-3">
+                  <button onClick={() => moveToMy(p.id)} className="text-lg text-green-400 hover:text-green-300 font-bold flex-shrink-0">✅</button>
+                  <div className="flex-1">
+                    <div className="text-base font-semibold">{p.name}</div>
+                    <div className="text-sm opacity-70 mt-1">{p.desc}</div>
+                  </div>
+                  <button onClick={() => moveToNot(p.id)} className="text-lg text-red-400 hover:text-red-300 font-bold flex-shrink-0">❌</button>
                 </div>
               </div>
             ))}
