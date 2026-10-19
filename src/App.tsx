@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Illustrations } from './components/Illustrations';
+import { GAME_IMAGES, getActImage } from './components/GameImages';
 import {
   SCENES, SPHERES, BUSINESS_TYPES, IDEAS, INITIAL_STATS,
   GLOSSARY, ENDINGS, TARGET_AUDIENCE_DATA, BUSINESS_PLAN_SECTIONS,
@@ -280,12 +281,16 @@ export default function App() {
   const renderStartScreen = () => (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-fadeIn">
       <div className="text-center mb-8">
-        {Illustrations.city && <Illustrations.city />}
-        <h1 className="text-4xl md:text-5xl font-bold mt-6 mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+        <img 
+          src={GAME_IMAGES.hero} 
+          alt="Стартап - Путь основателя" 
+          className="game-hero-image mb-6"
+        />
+        <h1 className="text-4xl md:text-5xl font-bold mt-6 mb-2 text-white" style={{ fontFamily: 'Georgia, serif', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
           СТАРТАП
         </h1>
-        <p className="text-xl text-orange-400 mb-2">Путь основателя</p>
-        <p className="text-sm opacity-60">Обучающая игра по предпринимательству • 10 класс</p>
+        <p className="text-xl text-orange-400 mb-2 font-semibold">Путь основателя</p>
+        <p className="text-sm text-gray-300">Обучающая игра по предпринимательству • 10 класс</p>
       </div>
       <div className="flex flex-col gap-3 w-full max-w-xs">
         <button className="btn btn-primary text-lg" onClick={() => setState(prev => ({ ...prev, screen: 'role_select' }))}>
@@ -439,6 +444,7 @@ export default function App() {
 
     const svgId = scene.svgId as keyof typeof Illustrations;
     const SvgComponent = Illustrations[svgId];
+    const actImage = getActImage(state.currentAct);
     
     // Check if we should show minigame button for this act
     const minigameForAct = Object.values(MINIGAMES).find(m => m.act === state.currentAct);
@@ -449,19 +455,23 @@ export default function App() {
         {renderHUD()}
         <div className="flex-1 p-4 max-w-4xl mx-auto w-full">
           <div className={`${animClass}`}>
-            {/* Illustration */}
-            {SvgComponent && (
-              <div className="flex justify-center mb-4">
-                <div className="w-64 h-48">
-                  <SvgComponent />
-                </div>
-              </div>
-            )}
+            {/* Act Image */}
+            <div className="flex justify-center mb-6">
+              <img 
+                src={actImage} 
+                alt={`Этап ${state.currentAct}`}
+                className="game-scene-image"
+              />
+            </div>
 
             {/* Scene title */}
-            <div className="text-center mb-4">
-              <span className="text-xs opacity-50 uppercase tracking-wider">Этап {scene.act} • {['Идея и рынок', 'Регистрация', 'Капитал', 'Команда', 'Запуск и рост', 'Кризис и выбор'][scene.act - 1]}</span>
-              <h2 className="text-2xl font-bold mt-1" style={{ fontFamily: 'Georgia, serif' }}>{scene.title}</h2>
+            <div className="text-center mb-6">
+              <span className="text-sm text-gray-400 uppercase tracking-wider font-medium">
+                Этап {scene.act} • {['Идея и рынок', 'Регистрация', 'Капитал', 'Команда', 'Запуск и рост', 'Кризис и выбор'][scene.act - 1]}
+              </span>
+              <h2 className="text-3xl font-bold mt-2 text-white" style={{ fontFamily: 'Georgia, serif', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
+                {scene.title}
+              </h2>
             </div>
 
             {/* Scene text */}
@@ -576,16 +586,20 @@ export default function App() {
     else if (state.currentAct >= 6 && decisionRate >= 0.6) grade = 4;
     else if (state.currentAct >= 5) grade = 3;
 
+    const endingImage = state.ending === 'bankruptcy' ? GAME_IMAGES.act6 :
+                        state.ending === 'burnout' ? GAME_IMAGES.act6 :
+                        GAME_IMAGES.act5;
+
     return (
       <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
         <div className="max-w-2xl w-full">
           <div className="text-center mb-6">
-            {Illustrations.success && state.ending !== 'bankruptcy' && state.ending !== 'burnout' ? 
-              <div className="w-64 h-48 mx-auto"><Illustrations.success /></div> :
-              state.ending === 'bankruptcy' ? <div className="w-64 h-48 mx-auto"><Illustrations.bankruptcy /></div> :
-              <div className="w-64 h-48 mx-auto"><Illustrations.crisis /></div>
-            }
-            <h1 className="text-3xl font-bold mt-4" style={{ fontFamily: 'Georgia, serif' }}>
+            <img 
+              src={endingImage} 
+              alt="Финал"
+              className="game-scene-image mb-4"
+            />
+            <h1 className="text-4xl font-bold mt-4 text-white" style={{ fontFamily: 'Georgia, serif', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
               {ending.title}
             </h1>
           </div>
@@ -969,9 +983,9 @@ function MinigameTargetAudience({ sphere, onComplete }: { sphere: string; onComp
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-2xl w-full">
-        <h2 className="text-xl font-bold mb-2">🎯 {MINIGAMES.target_audience.title}</h2>
-        <p className="text-sm text-gray-500 mb-4">{MINIGAMES.target_audience.description}</p>
-        <p className="text-sm mb-4">Твоя сфера: <strong>{SPHERES[sphere]?.name}</strong>. Определи, кто твой идеальный клиент!</p>
+        <h2 className="text-2xl font-bold mb-3 text-white">🎯 {MINIGAMES.target_audience.title}</h2>
+        <p className="text-sm text-gray-300 mb-4">{MINIGAMES.target_audience.description}</p>
+        <p className="text-sm mb-4 text-gray-200">Твоя сфера: <strong className="text-orange-400">{SPHERES[sphere]?.name}</strong>. Определи, кто твой идеальный клиент!</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
@@ -1077,8 +1091,8 @@ function MinigameBusinessPlan({ onComplete }: { onComplete: (score: number) => v
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-2xl w-full">
-        <h2 className="text-xl font-bold mb-2">📋 {MINIGAMES.business_plan.title}</h2>
-        <p className="text-sm text-gray-500 mb-4">{MINIGAMES.business_plan.description}</p>
+        <h2 className="text-2xl font-bold mb-3 text-white">📋 {MINIGAMES.business_plan.title}</h2>
+        <p className="text-sm text-gray-300 mb-4">{MINIGAMES.business_plan.description}</p>
 
         <div className="mb-4">
           <h4 className="font-semibold text-green-400 mb-2">Порядок разделов:</h4>
@@ -1155,11 +1169,11 @@ function MinigameInvestor({ onComplete }: { onComplete: (score: number) => void 
     return (
       <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
         <div className="game-card max-w-lg w-full text-center">
-          <h2 className="text-xl font-bold mb-4">🤝 Переговоры завершены!</h2>
-          <p className="text-3xl font-bold mb-2" style={{ color: finalScore >= 70 ? '#2ec4b6' : finalScore >= 40 ? '#ffd60a' : '#e71d36' }}>
+          <h2 className="text-2xl font-bold mb-4 text-white">🤝 Переговоры завершены!</h2>
+          <p className="text-4xl font-bold mb-2" style={{ color: finalScore >= 70 ? '#2ec4b6' : finalScore >= 40 ? '#ffd60a' : '#e71d36', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
             {finalScore}%
           </p>
-          <p className="text-sm text-gray-400 mb-4">
+          <p className="text-sm text-gray-300 mb-4">
             {finalScore >= 70 ? 'Отличные переговоры! Инвестор впечатлён.' :
              finalScore >= 40 ? 'Неплохо, но можно было лучше.' :
              'Инвестор не впечатлён. Нужно учиться аргументировать.'}
@@ -1178,7 +1192,7 @@ function MinigameInvestor({ onComplete }: { onComplete: (score: number) => void 
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-lg w-full">
-        <h2 className="text-xl font-bold mb-4">💼 {MINIGAMES.investor.title}</h2>
+        <h2 className="text-2xl font-bold mb-4 text-white">💼 {MINIGAMES.investor.title}</h2>
         <div className="mb-4 p-4 rounded-lg bg-gray-800 border border-gray-700">
           <p className="text-sm text-gray-400">Инвестор:</p>
           <p className="font-medium">«{dialogue.investor}»</p>
@@ -1215,15 +1229,19 @@ function MinigameInterview({ onComplete }: { onComplete: (score: number) => void
   const [decision, setDecision] = useState<string | null>(null);
   const [finished, setFinished] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
+  const [showDecisionScreen, setShowDecisionScreen] = useState(false);
 
   const candidate = INTERVIEW_CANDIDATES[candidateIdx];
 
   const handleAnswer = (isGood: boolean) => {
-    if (isGood) setGoodAnswers(prev => prev + 1);
+    const newGoodAnswers = isGood ? goodAnswers + 1 : goodAnswers;
+    if (isGood) setGoodAnswers(newGoodAnswers);
+    
     if (questionIdx < candidate.questions.length - 1) {
       setQuestionIdx(prev => prev + 1);
     } else {
-      // Show decision screen
+      // Last question answered - show decision screen
+      setShowDecisionScreen(true);
     }
   };
 
@@ -1241,6 +1259,7 @@ function MinigameInterview({ onComplete }: { onComplete: (score: number) => void
         setQuestionIdx(0);
         setGoodAnswers(0);
         setDecision(null);
+        setShowDecisionScreen(false);
       }, 2000);
     } else {
       setFinished(true);
@@ -1252,8 +1271,8 @@ function MinigameInterview({ onComplete }: { onComplete: (score: number) => void
     return (
       <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
         <div className="game-card max-w-lg w-full text-center">
-          <h2 className="text-xl font-bold mb-4">Собеседования завершены!</h2>
-          <p className="text-3xl font-bold mb-2">{finalScore}%</p>
+          <h2 className="text-2xl font-bold mb-4 text-white">Собеседования завершены!</h2>
+          <p className="text-4xl font-bold mb-2" style={{ color: finalScore >= 70 ? '#2ec4b6' : finalScore >= 40 ? '#ffd60a' : '#e71d36', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{finalScore}%</p>
           <div className="teaching-tip mb-4 text-left">
             На собеседовании важно: задавать вопросы о конкретных результатах, проверять мотивацию, оценивать культурное соответствие. Не нанимай «знакомого друга» без проверки навыков!
           </div>
@@ -1276,23 +1295,22 @@ function MinigameInterview({ onComplete }: { onComplete: (score: number) => void
   }
 
   const question = candidate.questions[questionIdx];
-  const allAnswered = questionIdx >= candidate.questions.length;
 
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-lg w-full">
-        <h2 className="text-xl font-bold mb-2">🎤 {MINIGAMES.interview.title}</h2>
+        <h2 className="text-2xl font-bold mb-3 text-white">🎤 {MINIGAMES.interview.title}</h2>
         <div className="mb-4 p-3 rounded-lg bg-gray-800">
-          <p className="font-bold">{candidate.name}</p>
-          <p className="text-sm text-gray-400">{candidate.resume}</p>
+          <p className="font-bold text-white">{candidate.name}</p>
+          <p className="text-sm text-gray-300">{candidate.resume}</p>
           {candidate.redFlags.map((flag, i) => (
             <p key={i} className="text-xs text-red-400 mt-1">⚠️ {flag}</p>
           ))}
         </div>
 
-        {!allAnswered ? (
+        {!showDecisionScreen ? (
           <div>
-            <p className="font-semibold mb-2">Вопрос {questionIdx + 1}/{candidate.questions.length}: {question.q}</p>
+            <p className="font-semibold mb-2 text-white">Вопрос {questionIdx + 1}/{candidate.questions.length}: {question.q}</p>
             <div className="space-y-2">
               <button className="btn-choice" onClick={() => handleAnswer(true)}>
                 ✅ Хороший ответ: {question.good}
@@ -1304,7 +1322,7 @@ function MinigameInterview({ onComplete }: { onComplete: (score: number) => void
           </div>
         ) : (
           <div>
-            <p className="font-semibold mb-3">Принять решение:</p>
+            <p className="font-semibold mb-3 text-white">Принять решение:</p>
             <button className="btn-choice" onClick={() => handleDecision('hire')}>💼 Нанять</button>
             <button className="btn-choice" onClick={() => handleDecision('trial')}>📋 Взять на испытательный срок</button>
             <button className="btn-choice" onClick={() => handleDecision('reject')}>🚫 Отказать</button>
@@ -1346,9 +1364,9 @@ function MinigameFinance({ onComplete }: { onComplete: (score: number) => void }
     return (
       <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
         <div className="game-card max-w-lg w-full text-center">
-          <h2 className="text-xl font-bold mb-4">💰 Финансовый калькулятор</h2>
-          <p className="text-3xl font-bold mb-2">{score}%</p>
-          <p className="text-sm text-gray-400 mb-4">Правильных ответов: {correctCount} из {FINANCE_PROBLEMS.length}</p>
+          <h2 className="text-2xl font-bold mb-4 text-white">💰 Финансовый калькулятор</h2>
+          <p className="text-4xl font-bold mb-2" style={{ color: score >= 70 ? '#2ec4b6' : score >= 40 ? '#ffd60a' : '#e71d36', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{score}%</p>
+          <p className="text-sm text-gray-300 mb-4">Правильных ответов: {correctCount} из {FINANCE_PROBLEMS.length}</p>
           <div className="teaching-tip mb-4 text-left">
             Ключевые формулы: Прибыль = Выручка − Издержки. Точка безубыточности = Постоянные затраты / Маржа на единицу. Кассовый разрыв = когда нужно заплатить сейчас, а деньги придут позже.
           </div>
@@ -1361,8 +1379,8 @@ function MinigameFinance({ onComplete }: { onComplete: (score: number) => void }
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-lg w-full">
-        <h2 className="text-xl font-bold mb-2">💰 {MINIGAMES.finance.title}</h2>
-        <p className="text-xs text-gray-500 mb-3">Задача {problemIdx + 1} из {FINANCE_PROBLEMS.length}</p>
+        <h2 className="text-2xl font-bold mb-3 text-white">💰 {MINIGAMES.finance.title}</h2>
+        <p className="text-sm text-gray-300 mb-3">Задача {problemIdx + 1} из {FINANCE_PROBLEMS.length}</p>
         
         <div className="p-4 rounded-lg bg-gray-800 mb-4">
           <p className="text-sm">{problem.question}</p>
@@ -1449,10 +1467,10 @@ function MinigameMarketingMix({ sphere, onComplete }: { sphere: string; onComple
   return (
     <div className="min-h-screen p-4 flex flex-col items-center animate-fadeIn">
       <div className="game-card max-w-lg w-full">
-        <h2 className="text-xl font-bold mb-2">📣 {MINIGAMES.marketing_mix.title}</h2>
-        <p className="text-sm text-gray-500 mb-4">{MINIGAMES.marketing_mix.description}</p>
-        <p className="text-sm mb-2">Бюджет: <strong>{formatMoney(totalBudget)}</strong></p>
-        <p className={`text-sm mb-4 ${remaining < 0 ? 'text-red-400' : 'text-green-400'}`}>
+        <h2 className="text-2xl font-bold mb-3 text-white">📣 {MINIGAMES.marketing_mix.title}</h2>
+        <p className="text-sm text-gray-300 mb-4">{MINIGAMES.marketing_mix.description}</p>
+        <p className="text-sm mb-2 text-gray-200">Бюджет: <strong className="text-yellow-400">{formatMoney(totalBudget)}</strong></p>
+        <p className={`text-sm mb-4 font-semibold ${remaining < 0 ? 'text-red-400' : 'text-green-400'}`}>
           Осталось: {formatMoney(remaining)}
         </p>
 
@@ -1477,14 +1495,14 @@ function MinigameMarketingMix({ sphere, onComplete }: { sphere: string; onComple
 
         {calculated && (
           <div className="teaching-tip mb-4">
-            <p><strong>Результат:</strong> {score}% эффективности маркетинга</p>
-            <p className="text-sm mt-1">
-              {score >= 70 ? 'Отличный баланс! Ты учёл и привлечение, и удержание.' :
-               score >= 40 ? 'Неплохо, но есть куда расти. Попробуй другой баланс.' :
-               'Стоит пересмотреть стратегию. Не вкладывай всё в один канал.'}
+            <p><strong>Результат:</strong> <span className="text-2xl font-bold">{score}%</span> эффективности маркетинга</p>
+            <p className="text-sm mt-2 text-gray-200">
+              {score >= 70 ? '✅ Отличный баланс! Ты учёл и привлечение, и удержание.' :
+               score >= 40 ? '⚠️ Неплохо, но есть куда расти. Попробуй другой баланс.' :
+               '❌ Стоит пересмотреть стратегию. Не вкладывай всё в один канал.'}
             </p>
-            <p className="text-xs mt-2 opacity-70">
-              Подсказка: для {SPHERES[sphere]?.name} лучше всего работают {
+            <p className="text-xs mt-3 text-gray-300">
+              💡 Подсказка: для <strong className="text-orange-400">{SPHERES[sphere]?.name}</strong> лучше всего работают {
                 sphere === 'food' ? 'скидки и сервис' :
                 sphere === 'it' ? 'реклама и сервис' :
                 sphere === 'production' ? 'упаковка и реклама' :
