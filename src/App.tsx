@@ -344,95 +344,165 @@ export default function App() {
 
   const renderCreateScreen = () => (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-fadeIn">
-      <div className="game-card max-w-lg w-full">
-        <h2 className="text-2xl font-bold mb-6 text-center">🚀 Создай свой стартап</h2>
+      <div className="game-card max-w-2xl w-full">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2 text-gray-800">🚀 Создай свой стартап</h2>
+          <p className="text-gray-600">Заполни данные, чтобы начать предпринимательское путешествие</p>
+        </div>
         
-        <div className="mb-4">
-          <label className="block text-sm font-semibold mb-1">Имя основателя:</label>
+        {/* Шаг 1: Имя основателя */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg">1</div>
+            <label className="text-lg font-semibold text-gray-800">Имя основателя</label>
+          </div>
           <input
             type="text"
-            className="w-full p-3 rounded-lg border-2 border-gray-200 focus:border-orange-400 outline-none text-gray-800"
+            className="w-full p-4 rounded-xl border-2 border-gray-300 focus:border-orange-400 focus:ring-4 focus:ring-orange-100 outline-none text-gray-800 text-lg transition-all"
             placeholder="Введите ваше имя"
             value={state.founderName}
             onChange={e => setState(prev => ({ ...prev, founderName: e.target.value }))}
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-semibold mb-2">Сфера бизнеса:</label>
-          <div className="grid grid-cols-1 gap-2">
+        {/* Шаг 2: Сфера бизнеса */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg">2</div>
+            <label className="text-lg font-semibold text-gray-800">Сфера бизнеса</label>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {Object.entries(SPHERES).map(([key, s]) => (
               <button
                 key={key}
-                className={`p-3 rounded-lg border-2 text-left transition-all ${
-                  state.sphere === key ? 'border-orange-400 bg-orange-50' : 'border-gray-200 hover:border-orange-300'
+                className={`group relative p-6 rounded-2xl border-3 text-left transition-all duration-300 transform hover:scale-105 ${
+                  state.sphere === key 
+                    ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg shadow-orange-200' 
+                    : 'border-gray-300 bg-white hover:border-orange-300 hover:shadow-md'
                 }`}
                 onClick={() => setState(prev => ({ ...prev, sphere: key, businessIdea: '' }))}
               >
-                <span className="text-xl mr-2">{s.emoji}</span>
-                <span className="font-semibold text-gray-800">{s.name}</span>
-                <span className="text-xs text-gray-500 ml-2">{s.description}</span>
+                <div className="text-5xl mb-3 transform group-hover:scale-110 transition-transform">{s.emoji}</div>
+                <div className="font-bold text-xl text-gray-800 mb-2">{s.name}</div>
+                <div className="text-sm text-gray-600 leading-relaxed">{s.description}</div>
+                {state.sphere === key && (
+                  <div className="absolute top-3 right-3 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white text-xl">✓</div>
+                )}
               </button>
             ))}
           </div>
         </div>
 
+        {/* Шаг 3: Тип бизнеса */}
         {state.sphere && (
-          <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">Тип бизнеса:</label>
-            <div className="grid grid-cols-1 gap-2">
+          <div className="mb-8 animate-slideUp">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-lg">3</div>
+              <label className="text-lg font-semibold text-gray-800">Форма бизнеса</label>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
               {Object.entries(BUSINESS_TYPES).map(([key, bt]) => (
                 <button
                   key={key}
-                  className={`p-3 rounded-lg border-2 text-left transition-all ${
-                    state.businessType === key ? 'border-green-400 bg-green-50' : 'border-gray-200 hover:border-green-300'
+                  className={`group relative p-6 rounded-2xl border-3 text-left transition-all duration-300 transform hover:scale-102 ${
+                    state.businessType === key 
+                      ? 'border-green-500 bg-gradient-to-br from-green-50 to-green-100 shadow-lg shadow-green-200' 
+                      : 'border-gray-300 bg-white hover:border-green-300 hover:shadow-md'
                   }`}
                   onClick={() => setState(prev => ({ ...prev, businessType: key }))}
                 >
-                  <div className="font-semibold text-gray-800">{bt.name}</div>
-                  <div className="text-xs text-gray-500">Налог: {bt.tax} | {bt.pros}</div>
-                  <div className="text-xs text-red-500">Минус: {bt.cons}</div>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="font-bold text-xl text-gray-800">{bt.name}</div>
+                    {state.businessType === key && (
+                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xl">✓</div>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-gray-700">💰 Налог:</span>
+                      <span className="text-sm text-gray-600">{bt.tax}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-gray-700">📊 Лимит:</span>
+                      <span className="text-sm text-gray-600">{bt.maxIncome}</span>
+                    </div>
+                    <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                      <div className="text-xs font-semibold text-green-700 mb-1">✅ Плюсы:</div>
+                      <div className="text-sm text-green-800">{bt.pros}</div>
+                    </div>
+                    <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                      <div className="text-xs font-semibold text-red-700 mb-1">⚠️ Минусы:</div>
+                      <div className="text-sm text-red-800">{bt.cons}</div>
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>
           </div>
         )}
 
+        {/* Шаг 4: Бизнес-идея */}
         {state.sphere && state.businessType && (
-          <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">Бизнес-идея:</label>
-            <div className="grid grid-cols-1 gap-2 mb-2">
-              {(IDEAS[state.sphere as keyof typeof IDEAS] || []).map((idea: string, i: number) => (
-                <button
-                  key={i}
-                  className={`p-3 rounded-lg border-2 text-left text-sm transition-all ${
-                    state.businessIdea === idea ? 'border-purple-400 bg-purple-50' : 'border-gray-200 hover:border-purple-300'
-                  }`}
-                  onClick={() => setState(prev => ({ ...prev, businessIdea: idea }))}
-                >
-                  💡 {idea}
-                </button>
-              ))}
+          <div className="mb-8 animate-slideUp">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-lg">4</div>
+              <label className="text-lg font-semibold text-gray-800">Бизнес-идея</label>
             </div>
-            <input
-              type="text"
-              className="w-full p-3 rounded-lg border-2 border-gray-200 focus:border-purple-400 outline-none text-gray-800 text-sm"
-              placeholder="Или введите свою идею..."
-              value={state.businessIdea}
-              onChange={e => setState(prev => ({ ...prev, businessIdea: e.target.value }))}
-            />
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-3">Выберите готовую идею или предложите свою:</p>
+              <div className="grid grid-cols-1 gap-3">
+                {(IDEAS[state.sphere as keyof typeof IDEAS] || []).map((idea: string, i: number) => (
+                  <button
+                    key={i}
+                    className={`group relative p-5 rounded-xl border-3 text-left transition-all duration-300 transform hover:scale-102 ${
+                      state.businessIdea === idea 
+                        ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg shadow-purple-200' 
+                        : 'border-gray-300 bg-white hover:border-purple-300 hover:shadow-md'
+                    }`}
+                    onClick={() => setState(prev => ({ ...prev, businessIdea: idea }))}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="text-3xl flex-shrink-0">💡</div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-gray-800 text-base leading-relaxed">{idea}</div>
+                      </div>
+                      {state.businessIdea === idea && (
+                        <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-xl flex-shrink-0">✓</div>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="relative">
+              <div className="absolute left-4 top-4 text-2xl">✨</div>
+              <input
+                type="text"
+                className="w-full p-4 pl-14 rounded-xl border-2 border-gray-300 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none text-gray-800 text-base transition-all"
+                placeholder="Или введите свою уникальную идею..."
+                value={state.businessIdea}
+                onChange={e => setState(prev => ({ ...prev, businessIdea: e.target.value }))}
+              />
+            </div>
           </div>
         )}
 
+        {/* Кнопка запуска */}
         <button
-          className="btn btn-primary w-full mt-4"
+          className={`w-full py-5 rounded-2xl font-bold text-xl transition-all duration-300 transform ${
+            state.founderName && state.sphere && state.businessType && state.businessIdea
+              ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-400'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
           disabled={!state.founderName || !state.sphere || !state.businessType || !state.businessIdea}
           onClick={() => {
             setState(prev => ({ ...prev, screen: 'game', currentScene: 'a1_s1', currentAct: 1 }));
             triggerAnim();
           }}
         >
-          🚀 Начать путь!
+          {state.founderName && state.sphere && state.businessType && state.businessIdea
+            ? '🚀 Начать предпринимательское путешествие!'
+            : 'Заполните все поля для начала'}
         </button>
       </div>
     </div>
@@ -717,12 +787,12 @@ export default function App() {
     if (!currentMinigame) return null;
 
     switch (currentMinigame) {
-      case 'target_audience': return <MinigameTargetAudience sphere={state.sphere} onComplete={completeMinigame} />;
-      case 'business_plan': return <MinigameBusinessPlan onComplete={completeMinigame} />;
-      case 'investor': return <MinigameInvestor onComplete={completeMinigame} />;
-      case 'interview': return <MinigameInterview onComplete={completeMinigame} />;
-      case 'finance': return <MinigameFinance onComplete={completeMinigame} />;
-      case 'marketing_mix': return <MinigameMarketingMix sphere={state.sphere} onComplete={completeMinigame} />;
+      case 'target_audience': return <div className="minigame-container"><MinigameTargetAudience sphere={state.sphere} onComplete={completeMinigame} /></div>;
+      case 'business_plan': return <div className="minigame-container"><MinigameBusinessPlan onComplete={completeMinigame} /></div>;
+      case 'investor': return <div className="minigame-container"><MinigameInvestor onComplete={completeMinigame} /></div>;
+      case 'interview': return <div className="minigame-container"><MinigameInterview onComplete={completeMinigame} /></div>;
+      case 'finance': return <div className="minigame-container"><MinigameFinance onComplete={completeMinigame} /></div>;
+      case 'marketing_mix': return <div className="minigame-container"><MinigameMarketingMix sphere={state.sphere} onComplete={completeMinigame} /></div>;
       default: return null;
     }
   };

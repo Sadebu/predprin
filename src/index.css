@@ -17,7 +17,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-mid) 100%);
   color: var(--text-light);
   min-height: 100vh;
@@ -28,11 +28,48 @@ body {
   letter-spacing: 0.01em;
 }
 
-h1, h2, h3, h4 {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.3;
+}
+
+/* Миниигры - темный текст на светлом фоне */
+.minigame-container .game-card,
+.minigame-container h2,
+.minigame-container h3,
+.minigame-container h4,
+.minigame-container p,
+.minigame-container span,
+.minigame-container label,
+.minigame-container .font-bold,
+.minigame-container .font-semibold {
+  color: #1a1a2e !important;
+}
+
+.minigame-container .text-white,
+.minigame-container .text-gray-100,
+.minigame-container .text-gray-200,
+.minigame-container .text-gray-300,
+.minigame-container .text-gray-400 {
+  color: #1a1a2e !important;
+}
+
+.minigame-container .text-orange-400 {
+  color: #ff8c42 !important;
+}
+
+.minigame-container .text-green-400 {
+  color: #10b981 !important;
+}
+
+.minigame-container .text-red-400 {
+  color: #ef4444 !important;
+}
+
+.minigame-container .text-yellow-400 {
+  color: #f59e0b !important;
 }
 
 /* Game Images */
@@ -459,6 +496,31 @@ h1, h2, h3, h4 {
 ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
 ::-webkit-scrollbar-thumb { background: rgba(255,140,66,0.4); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,140,66,0.6); }
+
+/* Custom utilities */
+.border-3 {
+  border-width: 3px;
+}
+
+.hover\:scale-102:hover {
+  transform: scale(1.02);
+}
+
+/* Smooth transitions for all interactive elements */
+button, a, input {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Better focus states */
+input:focus, button:focus-visible {
+  outline: none;
+}
+
+/* Card hover effects */
+.game-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
 
 /* Tabs */
 .tab-btn {
